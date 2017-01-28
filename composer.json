@@ -1,0 +1,23 @@
+{
+    "name": "GilDev/Calcul-O-Notes",
+    "description": "Un site permettant aux étudiants de l'université François-Rabelais de consulter facilement leurs notes.",
+    "keywords": ["microframework", "rest", "router", "psr7"],
+    "homepage": "https://github.com/GilDev/Calcul-O-Notes",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Lockhart",
+            "email": "info@joshlockhart.com",
+            "homepage": "http://www.joshlockhart.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0",
+        "slim/flash": "^0.2.0"
+    },
+	"scripts": {
+        "start": "php -S 0.0.0.0:8080 -t public public/index.php"
+	}
+}

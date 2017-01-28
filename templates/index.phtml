@@ -1,0 +1,46 @@
+<?php include('snippets/header.phtml'); ?>
+
+<h1 class="text-center">
+	Bienvenue sur le Calcul-O-Notes !
+</h1>
+
+<hr \>
+
+<div class="jumbotron">
+	<div class="row">
+		<div class="col-sm-6">
+			<p>Vous êtes étudiant à l'université François-Rabelais ? Ça vous gonfle de devoir aller sur l'ENT pour voir vos notes et de devoir calculer votre moyenne générale à la main ? Le Calcul-O-Notes est fait pour vous !</p>
+			<img style="display: block; margin-left: auto; margin-right: auto; padding-bottom: 20px;" src="images/geii.png">
+			<div class="alert alert-warning">Cet outil est expérimental et n'a été testé que pour des étudiants en DUT GEII.<br>
+			Merci de me faire part de vos problèmes/remarques/suggestions via les icônes en bas du site.</div>
+		</div>
+		<div class="col-sm-6">
+			<h3 class="text-center">Se connecter</h3>
+
+			<p>Connectez-vous avec les mêmes identifiants que pour l'ENT.</p>
+
+			<?php if ($erreurs): ?>
+				<?php foreach ($erreurs as $erreur): ?>
+					<div class="alert alert-danger" role="alert"><?php echo $erreur ?></div>
+				<?php endforeach ?>
+			<?php endif ?>
+				
+
+			<form method="POST" action="<?php echo $router->pathFor('notes') ?>">
+				<div class="form-group">
+					<label for="username">Nom d'utilisateur</label>
+					<input type="text" class="form-control" id="username" name="username" placeholder="Exemple : gilles.devillers">
+				</div>
+
+				<div class="form-group">
+					<label for="password">Mot de passe</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="Exemple : vive_le_geii">
+				</div>
+
+				<button type="submit" class="btn btn-success">Se connecter</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<?php require 'snippets/footer.phtml'; ?>

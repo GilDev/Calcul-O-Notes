@@ -1,0 +1,130 @@
+<?php include('snippets/header.phtml'); ?>
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="jumbotron" style="padding: 20px;">
+			<h2 class="text-center" style="text-decoration: underline;"><?php echo $prenom ?> <?php echo $nom ?></h2>
+			<?php
+			if ($moyenneGenerale >= 12)
+				$color = 'green';
+			elseif ($moyenneGenerale >= 10)
+				$color = 'orange';
+			else
+				$color = 'red';
+			?>
+			<h3>Moyenne générale : <span style="font-weight: bold; color: <?php echo $color ?>;"><?php echo $moyenneGenerale ?></span></h3>
+			<h4>Bonus total : +<?php echo $bonusTotal ?></h4>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="alert alert-info">
+			Votre moyenne générale est <span style="color: green;">verte</span> si elle est supérieure à 12, <span style="color: orange;">orange</span> si elle est supérieure à 10 et <span style="color: red;">rouge</span> si elle est inférieure à 10.<br><hr>
+			Les lignes en <span style="color: green;">vert</span> indiquent que vous majorez ce module.<br>
+			Les lignes en <span style="color: aqua;">bleu</span> indiquent que votre moyenne est à moins d'un point de la moyenne maximale du module.<br>
+			Les lignes en <span style="color: red;">rouge</span> indiquent que votre moyenne est à moins d'un point de la moyenne minimale du module.
+		</div>
+	</div>
+</div>
+
+<table class="table table-bordered table-condensed">
+	<tr>
+		<th>UE</th>
+		<th>Module</th>
+		<th>Moyenne</th>
+		<th>Moyenne min</th>
+		<th>Moyenne max</th>
+		<th>Cœfficient</th>
+		<th>Évaluation</th>
+		<th>Note</th>
+		<th>Cœfficient</th>
+	</tr>
+
+	<?php
+	$ueNumber = 0;
+	foreach ($notes as $ueName => $ue):
+		$moduleNumber = 0;
+		$numberOfNotes = 0;
+
+		// Get the number of notes of the UE for rowspan
+		foreach ($ue['modules'] as $module) {
+			foreach ($module['notes'] as $note) {
+				$numberOfNotes++;
+			}
+		}
+
+		foreach ($ue['modules'] as $moduleName => $module):
+			$noteNumber = 0;
+
+			$color = '';
+			if ($module['moyenne'] == $module['max'])
+				$color = 'success';
+			elseif ($module['moyenne'] >= $module['max'] - 1)
+				$color = 'info';
+			elseif ($module['moyenne'] <= $module['min'] + 1)
+				$color = 'danger';
+
+			foreach ($module['notes'] as $noteName => $note): ?>
+
+				<tr>
+					<?php if ($moduleNumber == 0 && $noteNumber == 0): ?>
+						<td rowspan="<?php echo $numberOfNotes ?>"><?php echo $ueName ?></td>
+					<?php endif ?>
+
+					<?php if ($noteNumber == 0): ?>
+						<td rowspan="<?php echo count($module['notes']) ?>"<?php if ($color) echo ' class="' . $color . '"' ?>><?php echo $moduleName ?></td>
+						<td rowspan="<?php echo count($module['notes']) ?>" class="text-center<?php echo ' ' . $color ?>"><?php echo $module['moyenne'] ?></td>
+						<td rowspan="<?php echo count($module['notes']) ?>" class="text-center<?php echo ' ' . $color ?>"><?php echo $module['min'] ?></td>
+						<td rowspan="<?php echo count($module['notes']) ?>" class="text-center<?php echo ' ' . $color ?>"><?php echo $module['max'] ?></td>
+						<td rowspan="<?php echo count($module['notes']) ?>" class="text-center<?php echo ' ' . $color ?>"><?php echo $module['coeff'] ?></td>
+					<?php endif ?>
+
+					<td><?php echo $noteName ?></td>
+					<td class="text-center"><?php echo $note['note'] ?></td>
+					<td class="text-center"><?php echo $note['coeff'] ?></td>
+				</tr>
+
+	<?php
+				$noteNumber++;
+			endforeach;
+			$moduleNumber++;
+		endforeach;
+		$ueNumber++;
+	endforeach; ?>
+</table>
+
+<hr>
+
+<table class="table table-bordered table-condensed">
+	<tr>
+		<th>#</th>
+		<th>Module</th>
+		<th>Bonus</th>
+		<th>Bonus min</th>
+		<th>Bonus max</th>
+	</tr>
+	<?php
+	foreach ($bonusUe as $bonusUeName => $bonusList):
+		$bonusNumber = 0;
+		foreach ($bonusList as $bonusName => $bonus):
+			$color = '';
+			if ($bonus['bonus'] == $bonus['max'])
+				$color = 'success'; ?>
+
+			<tr>
+				<?php if ($bonusNumber == 0): ?>
+				<td rowspan="<?php echo count($bonusList) ?>"><?php echo $bonusUeName ?></td>
+				<?php endif ?>
+
+				<td<?php if ($color) echo ' class="' . $color . '"' ?>><?php echo $bonusName ?></td>
+				<td class="text-center<?php if ($color) echo ' ' . $color ?>"><?php echo $bonus['bonus'] ?></td>
+				<td class="text-center<?php if ($color) echo ' ' . $color ?>"><?php echo $bonus['min'] ?></td>
+				<td class="text-center<?php if ($color) echo ' ' . $color ?>"><?php echo $bonus['max'] ?></td>
+			</tr>
+
+	<?php
+			$bonusNumber++;
+		endforeach;
+	endforeach; ?>
+</table>
+
+<?php require 'snippets/footer.phtml'; ?>
