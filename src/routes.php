@@ -60,6 +60,10 @@ $app->post('/notes', function ($request, $response, $args) {
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 	curl_setopt($ch, CURLOPT_URL, $settings['entGradesUrl']);
 	curl_setopt($ch, CURLOPT_POST, false);
+	$gradesSelectionPage = curl_exec($ch);
+
+	curl_setopt($ch, CURLOPT_POST, true);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, 'sem=SEM26173');
 	$gradesPage = curl_exec($ch);
 
 	// Clear connection
