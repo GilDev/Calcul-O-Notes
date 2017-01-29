@@ -6,7 +6,7 @@ $app->get('/', function ($request, $response, $args) {
 	if (array_key_exists('error', $flash))
 		$errors = $flash['error'];
 
-	return $this->renderer->render($response, 'index.phtml', ['erreurs' => $errors, 'router' => $this->router]);
+	return $this->renderer->render($response, 'index.phtml', ['erreurs' => $errors, 'maintenance' => $this->get('settings')['maintenance'], 'router' => $this->router]);
 })->setName('home');
 
 
@@ -19,6 +19,9 @@ $app->post('/notes', function ($request, $response, $args) {
 
 		return $response->withStatus(302)->withHeader('Location', '/');
 	}
+
+	$username = strtolower($data['username']);
+	$password = $data['password'];
 
 	// Connection initialisation
 	$ch = curl_init();
@@ -42,7 +45,7 @@ $app->post('/notes', function ($request, $response, $args) {
 	$uniqueId = $html->find('input[name=lt]', 0)->value;
 
 	// Connection
-	$loginPostData = 'username=' . $data['username'] . '&password=' . $data['password'] . '&lt=' . $uniqueId . '&_eventId=submit&submit=SE+CONNECTER';
+	$loginPostData = 'username=' . $username . '&password=' . $password . '&lt=' . $uniqueId . '&_eventId=submit&submit=SE+CONNECTER';
 	curl_setopt($ch, CURLOPT_POST, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $loginPostData);
 	curl_setopt($ch, CURLOPT_REFERER, $settings['entLoginUrl']);
@@ -65,6 +68,7 @@ $app->post('/notes', function ($request, $response, $args) {
 	curl_setopt($ch, CURLOPT_POST, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, 'sem=SEM26173');
 	$gradesPage = curl_exec($ch);
+
 
 	// Clear connection
 	curl_close($ch);
@@ -98,7 +102,7 @@ $app->post('/notes', function ($request, $response, $args) {
 			 	$bonus[$ueName][$bonusName]['min'] = $bonusMin;
 
 			 	$nextModule = $nextModule->next_sibling();
-			 }
+			}
 		} else {
 			$ueCoeff = $ue->find('td', 6)->plaintext;
 			$notes[$ueName]['coeff'] = $ueCoeff;
@@ -148,7 +152,7 @@ $app->post('/notes', function ($request, $response, $args) {
 	}
 	$globalAverage = round($totalNotes / $totalCoefficients, 2) + $totalBonus;
 
-	list($firstName, $lastName) = explode('.', $data['username']);
+	list($firstName, $lastName) = explode('.', $username);
 
 	return $this->renderer->render($response, 'notes.phtml', ['prenom' => ucfirst($firstName), 'nom' => ucfirst($lastName), 'notes' => $notes, 'bonusUe' => $bonus, 'moyenneGenerale' => $globalAverage, 'bonusTotal' => $totalBonus, 'router' => $this->router]);
 })->setName('notes');

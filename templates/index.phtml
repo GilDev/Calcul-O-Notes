@@ -19,31 +19,38 @@
 
 			<p>Connectez-vous avec les mêmes identifiants que pour l'ENT.</p>
 
-			<div class="alert alert-danger">
-				Le Calcul-O-Notes n'affiche pour le moment que le premier semestre.<br>
-				Le site sera mis à jour prochainement pour résoudre ce problème.
-			</div>
+			<?php if ($maintenance): ?>
+				<div class="alert alert-danger">
+					Le Calcul-O-Notes est actuellement en maintenance.<br>
+					Veuillez réessayer plus tard.
+				</div>
+			<?php else: ?>
+				<div class="alert alert-danger">
+					Le Calcul-O-Notes n'affiche pour le moment que le premier semestre.<br>
+					Le site sera mis à jour prochainement pour résoudre ce problème.
+				</div>
 
-			<?php if ($erreurs): ?>
-				<?php foreach ($erreurs as $erreur): ?>
-					<div class="alert alert-danger" role="alert"><?php echo $erreur ?></div>
-				<?php endforeach ?>
+				<?php if ($erreurs): ?>
+					<?php foreach ($erreurs as $erreur): ?>
+						<div class="alert alert-danger" role="alert"><?php echo $erreur ?></div>
+					<?php endforeach ?>
+				<?php endif ?>
+					
+
+				<form method="POST" action="<?php echo $router->pathFor('notes') ?>">
+					<div class="form-group">
+						<label for="username">Nom d'utilisateur</label>
+						<input type="text" class="form-control" id="username" name="username" placeholder="Exemple : gilles.devillers">
+					</div>
+
+					<div class="form-group">
+						<label for="password">Mot de passe</label>
+						<input type="password" class="form-control" id="password" name="password" placeholder="Exemple : vive_le_geii">
+					</div>
+
+					<button type="submit" class="btn btn-success">Se connecter</button>
+				</form>
 			<?php endif ?>
-				
-
-			<form method="POST" action="<?php echo $router->pathFor('notes') ?>">
-				<div class="form-group">
-					<label for="username">Nom d'utilisateur</label>
-					<input type="text" class="form-control" id="username" name="username" placeholder="Exemple : gilles.devillers">
-				</div>
-
-				<div class="form-group">
-					<label for="password">Mot de passe</label>
-					<input type="password" class="form-control" id="password" name="password" placeholder="Exemple : vive_le_geii">
-				</div>
-
-				<button type="submit" class="btn btn-success">Se connecter</button>
-			</form>
 		</div>
 	</div>
 </div>
